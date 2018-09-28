@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script> -->
+</head>
+<body>
+    <div>
+        <canvas id="myCanvas" width="500" height="400"></canvas>
+    </div>
+    <script>
+        //定义初始变量
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
+        //兼容requestAnimationFrame
+        if(!window.requestAnimationFrame){
+            window.requestAnimationFrame = function(fn){
+                setTimeout(fn,17);
+            };
+        }
+
+        //定义初始变量
+        var color = ["#1F2D3D","#324057","#475669","#8492A6","#99A9BF","#C0CCDA"]
+        var store = [];
+        //定义构造函数
+        var Ball = function(){
+            let colIdx = Math.floor(Math.random() * 6)
+            this.x = Math.random() * canvas.width;
+            this.moveX = Math.random() * 2 + 1;
+            this.r = 10 + 10 * Math.random();
+            this.color = color[colIdx];
+            this.draw = function(){
+                context.beginPath();
+                context.fillStyle = this.color;
+                context.arc(this.x, canvas.height/2,this.r,0,Math.PI*2); //arc(x,y,r,start,stop)
+                context.closePath();
+                context.fill();
+            };
+        }
+        //生成实例
+        for(var i=0; i<20 ;i++){
+            store[i] = new Ball();
+        }
+        //运动方法
+        var draw = function(){
+            store.forEach(item => {
+                item.x += item.moveX;
+                if(item.x > canvas.width){
+                    item.x = -2 * item.r;
+                }
+                item.draw();
+            });
+        }
+        //init 
+        var render = function(){
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            draw();
+
+            requestAnimationFrame(render);
+        }
+
+
+        render();
+    </script>
+</body>
+</html>
